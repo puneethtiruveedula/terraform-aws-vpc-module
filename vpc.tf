@@ -3,6 +3,7 @@ resource "aws_vpc" "main" {
   cidr_block       = var.vpc_cidr
   instance_tenancy = "default"
   enable_dns_hostnames = var.enable_dns_hostnames 
+  # False by default for newly created VPC
 
   tags = merge(
     var.common_tags,
@@ -50,8 +51,7 @@ resource "aws_subnet" "private" {
   vpc_id     = aws_vpc.main.id
   cidr_block = var.private_subnet_cidrs[count.index]
   availability_zone = local.az_names[count.index]
-  map_public_ip_on_launch = true
-
+  
   tags = merge(
     var.common_tags,
     var.private_subnet_cidr_tags,
@@ -67,8 +67,7 @@ resource "aws_subnet" "database" {
   vpc_id     = aws_vpc.main.id
   cidr_block = var.database_subnet_cidrs[count.index]
   availability_zone = local.az_names[count.index]
-  map_public_ip_on_launch = true
-
+  
   tags = merge(
     var.common_tags,
     var.database_subnet_cidr_tags,
